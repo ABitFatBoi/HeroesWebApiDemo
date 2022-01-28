@@ -2,6 +2,7 @@ using System.Reflection;
 using HeroesWebApiDemo.Data;
 using HeroesWebApiDemo.Options;
 using HeroesWebApiDemo.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -18,6 +19,9 @@ string connectionString =
         .GetConnectionString("SqlServerConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -55,6 +59,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
