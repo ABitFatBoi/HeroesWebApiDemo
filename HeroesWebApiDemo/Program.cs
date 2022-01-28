@@ -60,3 +60,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// For references in test projects
+public partial class Program { }
