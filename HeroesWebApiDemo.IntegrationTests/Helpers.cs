@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using HeroesWebApiDemo.Dtos;
 using Newtonsoft.Json;
-using Xunit;
 
 namespace HeroesWebApiDemo.IntegrationTests;
 

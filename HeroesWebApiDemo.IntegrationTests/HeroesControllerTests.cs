@@ -16,11 +16,9 @@ namespace HeroesWebApiDemo.IntegrationTests;
 public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client;
-    private readonly CustomWebApplicationFactory<Program> _factory;
 
     public HeroesControllerTests(CustomWebApplicationFactory<Program> factory)
     {
-        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         _client = factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false
@@ -65,30 +63,33 @@ public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<P
 
         var returnedHeroes = new List<HeroResponseDto> { hero1, hero2 };
         
-        var hero1returned = returnedHeroes.Find(h => h.Name == "Hero 1 (Ranged Mage)");
-        var hero2returned = returnedHeroes.Find(h => h.Name == "Hero 2 (Ranged Healer)");
+        var hero1Returned = returnedHeroes.Find(h => h.Name == "Hero 1 (Ranged Mage)");
+        var hero2Returned = returnedHeroes.Find(h => h.Name == "Hero 2 (Ranged Healer)");
 
-        hero1returned.Should().NotBeNull("Can't find hero with the Name \"Hero 1 (Ranged Mage)\"");
-        hero2returned.Should().NotBeNull("Can't find hero with the Name \"Hero 2 (Ranged Healer)\"");
+        hero1Returned.Should().NotBeNull("Can't find hero with the Name \"Hero 1 (Ranged Mage)\"");
+        hero2Returned.Should().NotBeNull("Can't find hero with the Name \"Hero 2 (Ranged Healer)\"");
 
-        hero1returned.Type.Should().Be(hero1.Type);
-        hero1returned.IsMelee.Should().Be(hero1.IsMelee);
+        hero1Returned!.Type.Should().Be(hero1.Type);
+        hero1Returned.IsMelee.Should().Be(hero1.IsMelee);
         
-        hero2returned.Type.Should().Be(hero2.Type);
-        hero2returned.IsMelee.Should().Be(hero2.IsMelee);
+        hero2Returned!.Type.Should().Be(hero2.Type);
+        hero2Returned.IsMelee.Should().Be(hero2.IsMelee);
     }
     
-    [Fact]
-    public async Task CreateOneHero_WithoutAnyHeroes_ReturnsCreatedAtActionResponse()
+    [Theory]
+    [InlineData("Hero 1 (Ranged Mage)", false, HeroType.Mage)]
+    [InlineData("Hero 2 (Melee Healer)", true, HeroType.Healer)]
+    public async Task CreateOneHero_WithoutAnyHeroes_ReturnsCreatedAtActionResponse
+        (string name, bool isMelee, HeroType type)
     {
         //Arrange
 
         //Act
-        var hero = await _client.CreateHeroRequestWithAssertionsAsync(
+        await _client.CreateHeroRequestWithAssertionsAsync(
             new HeroCreateDto {
-                Name = "Hero 1 (Ranged Mage)",
-                IsMelee = false,
-                Type = HeroType.Mage
+                Name = name,
+                IsMelee = isMelee,
+                Type = type
             });
 
         //Assert
