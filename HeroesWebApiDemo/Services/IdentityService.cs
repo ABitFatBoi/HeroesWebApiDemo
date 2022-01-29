@@ -1,15 +1,22 @@
-﻿using HeroesWebApiDemo.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using HeroesWebApiDemo.Entities;
+using HeroesWebApiDemo.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HeroesWebApiDemo.Services;
 
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly JwtSettings _jwtSettings;
 
-    public IdentityService(UserManager<IdentityUser> userManager)
+    public IdentityService(UserManager<IdentityUser> userManager, JwtSettings jwtSettings)
     {
         _userManager = userManager;
+        _jwtSettings = jwtSettings;
     }
     
     public async Task<AuthenticationResult> RegisterAsync(string userName, string email, string password)
@@ -38,7 +45,7 @@ public class IdentityService : IIdentityService
             };
         }
 
-        return await GenerateAuthenticationResultAsync(newUser);
+        return GenerateAuthenticationResult(newUser);
     }
 
     public async Task<AuthenticationResult> LoginAsync(string userName, string email, string password)
@@ -53,7 +60,7 @@ public class IdentityService : IIdentityService
             };
         }
 
-        return await GenerateAuthenticationResultAsync(requiredUser);
+        return GenerateAuthenticationResult(requiredUser);
     }
     
     private async Task<IdentityUser?> CheckIfUserExistsAsync(string userName, string email)
@@ -68,8 +75,29 @@ public class IdentityService : IIdentityService
         return existingUser;
     }
     
-    private async Task<AuthenticationResult> GenerateAuthenticationResultAsync(IdentityUser user)
+    private AuthenticationResult GenerateAuthenticationResult(IdentityUser user)
     {
-        throw new NotImplementedException();
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("id", user.Id)
+            }),
+            Expires = DateTime.UtcNow.Add(_jwtSettings.TokenLifetime),
+            SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        
+        return new AuthenticationResult
+        {
+            Token = tokenHandler.WriteToken(token)
+        };
     }
 }

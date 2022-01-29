@@ -20,6 +20,10 @@ string connectionString =
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
+var jwtSettings = new JwtSettings();
+builder.Configuration.Bind(nameof(jwtSettings), jwtSettings);
+builder.Services.AddSingleton(jwtSettings);
+
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AppDbContext>();
 
