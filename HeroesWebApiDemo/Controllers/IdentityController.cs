@@ -44,4 +44,24 @@ public class IdentityController : Controller
             Token = authenticationResult.Token!
         });
     }
+    
+    [HttpPost("/login")]
+    public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
+    {
+        var authenticationResult = await _identityService.LoginAsync(
+            userLoginDto.UserName, userLoginDto.Email, userLoginDto.Password);
+
+        if (authenticationResult.ErrorMessages is not null)
+        {
+            return BadRequest(new AuthenticationFailedDto
+            {
+                ErrorMessages = authenticationResult.ErrorMessages
+            });
+        }
+        
+        return Ok(new AuthenticationSuccessDto
+        {
+            Token = authenticationResult.Token!
+        });
+    }
 }
