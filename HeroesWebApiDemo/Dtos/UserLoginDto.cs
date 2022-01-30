@@ -2,10 +2,10 @@
 
 namespace HeroesWebApiDemo.Dtos;
 
-[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+// [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class UserLoginDto
 {
-    public string UserName { get; set; }
-    public string Email { get; set; }
+    public string? UserName { get; set; }
+    public string? Email { get; set; }
     public string Password { get; set; }
 }

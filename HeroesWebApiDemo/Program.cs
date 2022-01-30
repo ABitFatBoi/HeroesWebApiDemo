@@ -48,6 +48,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IHeroService, HeroService>();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
 
 builder.Services.AddSwaggerGen(x =>
 {

@@ -48,7 +48,7 @@ public class IdentityService : IIdentityService
         return GenerateAuthenticationResult(newUser);
     }
 
-    public async Task<AuthenticationResult> LoginAsync(string userName, string email, string password)
+    public async Task<AuthenticationResult> LoginAsync(string? userName, string? email, string password)
     {
         var requiredUser = await CheckIfUserExistsAsync(userName, email);
         
@@ -63,16 +63,22 @@ public class IdentityService : IIdentityService
         return GenerateAuthenticationResult(requiredUser);
     }
     
-    private async Task<IdentityUser?> CheckIfUserExistsAsync(string userName, string email)
+    /// <summary>
+    /// Checks if user exists using first parameter that is not null
+    /// </summary>
+    private async Task<IdentityUser?> CheckIfUserExistsAsync(string? userName, string? email)
     {
-        var existingUser = await _userManager.FindByNameAsync(userName);
-
-        if (existingUser == null)
+        if (userName is not null)
         {
-            existingUser = await _userManager.FindByEmailAsync(email);
+            return await _userManager.FindByNameAsync(userName);
         }
-
-        return existingUser;
+        
+        if (email is not null)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+        
+        return null;
     }
     
     private AuthenticationResult GenerateAuthenticationResult(IdentityUser user)
