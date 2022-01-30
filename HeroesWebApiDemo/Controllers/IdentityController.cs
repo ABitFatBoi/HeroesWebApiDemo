@@ -21,9 +21,27 @@ public class IdentityController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest(new AuthenticationFailedDto
+            {
+                ErrorMessages = ModelState.Values.SelectMany(
+                    v => v.Errors.Select(e => e.ErrorMessage))
+            });
         }
 
-        throw new NotImplementedException();
+        var authenticationResult = await _identityService.RegisterAsync(
+            userRegistrationDto.UserName, userRegistrationDto.Email, userRegistrationDto.Password);
+
+        if (authenticationResult.ErrorMessages is not null)
+        {
+            return BadRequest(new AuthenticationFailedDto
+            {
+                ErrorMessages = authenticationResult.ErrorMessages
+            });
+        }
+        
+        return Ok(new AuthenticationSuccessDto
+        {
+            Token = authenticationResult.Token!
+        });
     }
 }
