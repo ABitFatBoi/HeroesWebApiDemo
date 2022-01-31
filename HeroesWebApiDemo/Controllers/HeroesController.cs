@@ -2,10 +2,13 @@ using AutoMapper;
 using HeroesWebApiDemo.Dtos;
 using HeroesWebApiDemo.Entities;
 using HeroesWebApiDemo.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HeroesWebApiDemo.Controllers;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Produces("application/json")]
 [Route("[controller]")]
