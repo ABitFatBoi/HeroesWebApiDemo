@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using HeroesWebApiDemo.Data;
 using JetBrains.Annotations;
