@@ -1,13 +1,13 @@
-﻿using HeroesWebApiDemo.Dtos.Requests;
-using HeroesWebApiDemo.Dtos.Responses;
+﻿using HeroesWebApiDemo.Dtos.V1.Requests;
+using HeroesWebApiDemo.Dtos.V1.Responses;
+using HeroesWebApiDemo.Routes.V1;
 using HeroesWebApiDemo.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HeroesWebApiDemo.Controllers;
+namespace HeroesWebApiDemo.Controllers.V1;
 
 [ApiController]
 [Produces("application/json")]
-[Route("[controller]")]
 public class IdentityController : Controller
 {
     private readonly IIdentityService _identityService;
@@ -17,7 +17,7 @@ public class IdentityController : Controller
         _identityService = identityService;
     }
 
-    [HttpPost("/register")]
+    [HttpPost(ApiRoutes.Identity.Register)]
     public async Task<IActionResult> Register([FromBody] UserRegistrationDto userRegistrationDto)
     {
         if (!ModelState.IsValid)
@@ -46,7 +46,7 @@ public class IdentityController : Controller
         });
     }
     
-    [HttpPost("/login")]
+    [HttpPost(ApiRoutes.Identity.Login)]
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {
         var authenticationResult = await _identityService.LoginAsync(

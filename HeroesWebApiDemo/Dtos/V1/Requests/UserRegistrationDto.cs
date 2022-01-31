@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
-namespace HeroesWebApiDemo.Dtos.Requests;
+namespace HeroesWebApiDemo.Dtos.V1.Requests;
 
 public class UserRegistrationDto
 {

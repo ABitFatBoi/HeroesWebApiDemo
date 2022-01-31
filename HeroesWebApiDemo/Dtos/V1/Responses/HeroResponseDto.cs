@@ -1,6 +1,6 @@
 using HeroesWebApiDemo.Enums;
 
-namespace HeroesWebApiDemo.Dtos.Responses;
+namespace HeroesWebApiDemo.Dtos.V1.Responses;
 
 public class HeroResponseDto
 {

@@ -5,8 +5,9 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HeroesWebApiDemo.Dtos.Requests;
-using HeroesWebApiDemo.Dtos.Responses;
+using HeroesWebApiDemo.Dtos.V1.Requests;
+using HeroesWebApiDemo.Dtos.V1.Responses;
+using HeroesWebApiDemo.Routes.V1;
 using Newtonsoft.Json;
 
 namespace HeroesWebApiDemo.IntegrationTests;
@@ -15,7 +16,7 @@ public static class Helpers
 {
     public static async Task<HeroResponseDto> CreateHeroRequestWithAssertionsAsync(this HttpClient client, HeroCreateDto heroCreateDto)
     {
-        var response = await client.PostAsJsonAsync("Heroes", heroCreateDto);
+        var response = await client.PostAsJsonAsync(ApiRoutes.Heroes.Create, heroCreateDto);
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var returnedHero = JsonConvert.DeserializeObject<HeroResponseDto>(await response.Content.ReadAsStringAsync());
 
@@ -34,7 +35,7 @@ public static class Helpers
         
         async Task<string> GetJwtTokenAsync()
         {
-            var response = await client.PostAsJsonAsync("register", new UserRegistrationDto
+            var response = await client.PostAsJsonAsync(ApiRoutes.Identity.Register, new UserRegistrationDto
             {
                 UserName = "User1",
                 Email = "User1@example.com",
@@ -43,7 +44,7 @@ public static class Helpers
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
-                response = await client.PostAsJsonAsync("login", new UserLoginDto
+                response = await client.PostAsJsonAsync(ApiRoutes.Identity.Login, new UserLoginDto
                 {
                     UserName = "User1",
                     Password = "Password1!"

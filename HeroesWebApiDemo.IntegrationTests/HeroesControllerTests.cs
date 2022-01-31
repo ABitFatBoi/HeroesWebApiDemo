@@ -4,10 +4,11 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HeroesWebApiDemo.Dtos.Requests;
-using HeroesWebApiDemo.Dtos.Responses;
+using HeroesWebApiDemo.Dtos.V1.Requests;
+using HeroesWebApiDemo.Dtos.V1.Responses;
 using HeroesWebApiDemo.Entities;
 using HeroesWebApiDemo.Enums;
+using HeroesWebApiDemo.Routes.V1;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
@@ -32,7 +33,7 @@ public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<P
         await _client.AuthenticateAsync();
         
         //Act
-        var response = await _client.GetAsync("Heroes");
+        var response = await _client.GetAsync(ApiRoutes.Heroes.GetAll);
 
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -58,7 +59,7 @@ public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<P
             });
         
         //Act
-        var response = await _client.GetAsync("Heroes");
+        var response = await _client.GetAsync(ApiRoutes.Heroes.GetAll);
     
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -81,7 +82,7 @@ public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<P
     [Theory]
     [InlineData("Hero 1 (Ranged Mage)", false, HeroType.Mage)]
     [InlineData("Hero 2 (Melee Healer)", true, HeroType.Healer)]
-    public async Task CreateOneHero_WithoutAnyHeroes_ReturnsCreatedAtActionResponse
+    public async Task Create_OneHeroWithoutAnyHeroes_ReturnsCreatedAtActionResponse
         (string name, bool isMelee, HeroType type)
     {
         //Arrange

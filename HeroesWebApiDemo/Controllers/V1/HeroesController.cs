@@ -1,18 +1,18 @@
 using AutoMapper;
-using HeroesWebApiDemo.Dtos.Requests;
-using HeroesWebApiDemo.Dtos.Responses;
+using HeroesWebApiDemo.Dtos.V1.Requests;
+using HeroesWebApiDemo.Dtos.V1.Responses;
 using HeroesWebApiDemo.Entities;
+using HeroesWebApiDemo.Routes.V1;
 using HeroesWebApiDemo.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HeroesWebApiDemo.Controllers;
+namespace HeroesWebApiDemo.Controllers.V1;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Produces("application/json")]
-[Route("[controller]")]
 public class HeroesController : ControllerBase
 {
     private readonly IHeroService _heroService;
@@ -24,7 +24,7 @@ public class HeroesController : ControllerBase
         _mapper = mapper;
     }
     
-    [HttpGet]
+    [HttpGet(ApiRoutes.Heroes.GetAll)]
     public async Task<IActionResult> GetAll()
     {
         var heroes = (await _heroService.GetAllHeroesAsync())
@@ -33,7 +33,7 @@ public class HeroesController : ControllerBase
         return Ok(heroes);
     }
     
-    [HttpGet("{id}", Name = "GetHeroById")]
+    [HttpGet(ApiRoutes.Heroes.GetById, Name = "GetHeroById")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var hero = await _heroService.GetHeroByIdAsync(id);
@@ -43,7 +43,7 @@ public class HeroesController : ControllerBase
         return Ok(_mapper.Map<HeroResponseDto>(hero));
     }
 
-    [HttpPost]
+    [HttpPost(ApiRoutes.Heroes.Create)]
     public async Task<IActionResult> Create([FromBody] HeroCreateDto heroCreateDto)
     {
         var hero = _mapper.Map<Hero>(heroCreateDto);
@@ -56,7 +56,7 @@ public class HeroesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = responseDto.Id },responseDto);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut(ApiRoutes.Heroes.Update)]
     public async Task<IActionResult> Update(Guid id, [FromBody] HeroUpdateDto heroUpdateDto)
     {
         var hero = _mapper.Map<Hero>(heroUpdateDto);
@@ -67,7 +67,7 @@ public class HeroesController : ControllerBase
         return updated ? Ok(_mapper.Map<HeroResponseDto>(hero)) : NotFound("Hero hasn't been updated");
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete(ApiRoutes.Heroes.Delete)]
     public async Task<IActionResult> Delete(Guid id)
     {
         var deleted = await _heroService.DeleteHeroAsync(id);

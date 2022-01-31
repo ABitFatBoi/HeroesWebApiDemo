@@ -1,6 +1,6 @@
 using HeroesWebApiDemo.Enums;
 
-namespace HeroesWebApiDemo.Dtos.Requests;
+namespace HeroesWebApiDemo.Dtos.V1.Requests;
 
 public class HeroUpdateDto
 {

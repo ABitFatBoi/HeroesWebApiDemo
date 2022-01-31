@@ -1,6 +1,6 @@
 using AutoMapper;
-using HeroesWebApiDemo.Dtos.Requests;
-using HeroesWebApiDemo.Dtos.Responses;
+using HeroesWebApiDemo.Dtos.V1.Requests;
+using HeroesWebApiDemo.Dtos.V1.Responses;
 using HeroesWebApiDemo.Entities;
 
 namespace HeroesWebApiDemo.Profiles;
