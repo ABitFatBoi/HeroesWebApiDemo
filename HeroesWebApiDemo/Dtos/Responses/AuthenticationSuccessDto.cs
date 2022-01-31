@@ -1,4 +1,4 @@
-﻿namespace HeroesWebApiDemo.Dtos;
+﻿namespace HeroesWebApiDemo.Dtos.Responses;
 
 public class AuthenticationSuccessDto
 {

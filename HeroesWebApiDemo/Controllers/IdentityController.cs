@@ -1,4 +1,5 @@
-﻿using HeroesWebApiDemo.Dtos;
+﻿using HeroesWebApiDemo.Dtos.Requests;
+using HeroesWebApiDemo.Dtos.Responses;
 using HeroesWebApiDemo.Services;
 using Microsoft.AspNetCore.Mvc;
 

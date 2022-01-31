@@ -1,8 +1,7 @@
 ﻿using JetBrains.Annotations;
 
-namespace HeroesWebApiDemo.Dtos;
+namespace HeroesWebApiDemo.Dtos.Requests;
 
-// [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class UserLoginDto
 {
     public string? UserName { get; set; }

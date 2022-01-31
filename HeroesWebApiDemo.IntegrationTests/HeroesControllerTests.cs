@@ -1,11 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HeroesWebApiDemo.Dtos;
+using HeroesWebApiDemo.Dtos.Requests;
+using HeroesWebApiDemo.Dtos.Responses;
 using HeroesWebApiDemo.Entities;
 using HeroesWebApiDemo.Enums;
 using Microsoft.AspNetCore.Mvc.Testing;

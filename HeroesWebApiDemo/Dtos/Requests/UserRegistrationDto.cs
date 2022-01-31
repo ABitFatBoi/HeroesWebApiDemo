@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
-namespace HeroesWebApiDemo.Dtos;
+namespace HeroesWebApiDemo.Dtos.Requests;
 
-[UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class UserRegistrationDto
 {
     public string UserName { get; set; }

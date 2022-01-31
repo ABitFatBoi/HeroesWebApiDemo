@@ -1,8 +1,8 @@
 using HeroesWebApiDemo.Enums;
 
-namespace HeroesWebApiDemo.Dtos;
+namespace HeroesWebApiDemo.Dtos.Requests;
 
-public class HeroCreateDto
+public class HeroUpdateDto
 {
     public string Name { get; set; }
     public bool IsMelee { get; set; }

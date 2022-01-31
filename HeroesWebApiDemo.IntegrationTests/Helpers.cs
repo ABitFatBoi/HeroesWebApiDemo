@@ -5,7 +5,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using HeroesWebApiDemo.Dtos;
+using HeroesWebApiDemo.Dtos.Requests;
+using HeroesWebApiDemo.Dtos.Responses;
 using Newtonsoft.Json;
 
 namespace HeroesWebApiDemo.IntegrationTests;
