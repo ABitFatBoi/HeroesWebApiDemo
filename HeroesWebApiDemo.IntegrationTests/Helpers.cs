@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -24,4 +25,40 @@ public static class Helpers
         returnedHero.IsMelee.Should().Be(heroCreateDto.IsMelee);
         return returnedHero;
     }
+    
+    public static async Task AuthenticateAsync(this HttpClient client)
+    {
+        client.DefaultRequestHeaders.Authorization = 
+            new AuthenticationHeaderValue("bearer", await GetJwtTokenAsync());
+        
+        async Task<string> GetJwtTokenAsync()
+        {
+            var response = await client.PostAsJsonAsync("register", new UserRegistrationDto
+            {
+                UserName = "User1",
+                Email = "User1@example.com",
+                Password = "Password1!"
+            });
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                response = await client.PostAsJsonAsync("login", new UserLoginDto
+                {
+                    UserName = "User1",
+                    Password = "Password1!"
+                });
+            }
+
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var registrationResponse = JsonConvert.DeserializeObject<AuthenticationSuccessDto>(
+                await response.Content.ReadAsStringAsync());
+
+            registrationResponse.Should().NotBeNull();
+            registrationResponse.Token.Should().NotBeNull();
+            
+            return registrationResponse.Token;
+        }
+    }
+
 }

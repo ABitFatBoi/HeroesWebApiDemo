@@ -29,6 +29,7 @@ public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<P
     public async Task GetAll_WithoutAnyHeroes_ReturnsEmptyResponse()
     {
         //Arrange
+        await _client.AuthenticateAsync();
         
         //Act
         var response = await _client.GetAsync("Heroes");
@@ -37,11 +38,12 @@ public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<P
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         (await JsonSerializer.DeserializeAsync<List<Hero>>(await response.Content.ReadAsStreamAsync())).Should().BeEmpty();
     }
-    
+
     [Fact]
     public async Task GetAll_WithTestHeroes_ReturnsAllHeroes()
     {
         //Arrange
+        await _client.AuthenticateAsync();
         var hero1 = await _client.CreateHeroRequestWithAssertionsAsync(
                 new HeroCreateDto {
                     Name = "Hero 1 (Ranged Mage)",
@@ -83,6 +85,7 @@ public class HeroesControllerTests : IClassFixture<CustomWebApplicationFactory<P
         (string name, bool isMelee, HeroType type)
     {
         //Arrange
+        await _client.AuthenticateAsync();
 
         //Act
         await _client.CreateHeroRequestWithAssertionsAsync(
