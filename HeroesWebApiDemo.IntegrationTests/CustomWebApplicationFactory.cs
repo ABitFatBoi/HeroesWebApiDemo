@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using HeroesWebApiDemo.Data;
+using HeroesWebApiDemo.Migrations;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

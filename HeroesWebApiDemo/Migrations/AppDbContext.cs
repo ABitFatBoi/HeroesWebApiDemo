@@ -2,7 +2,7 @@ using HeroesWebApiDemo.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace HeroesWebApiDemo.Data;
+namespace HeroesWebApiDemo.Migrations;
 
 public class AppDbContext : IdentityDbContext
 {

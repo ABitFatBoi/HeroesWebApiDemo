@@ -1,4 +1,4 @@
-﻿using HeroesWebApiDemo.Data;
+﻿using HeroesWebApiDemo.Migrations;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 

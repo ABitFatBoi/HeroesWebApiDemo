@@ -1,4 +1,4 @@
-using HeroesWebApiDemo.Data;
+using HeroesWebApiDemo.Migrations;
 using HeroesWebApiDemo.Entities;
 using Microsoft.EntityFrameworkCore;
 
