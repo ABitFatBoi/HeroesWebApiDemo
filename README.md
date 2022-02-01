@@ -7,6 +7,7 @@ Application functionality:
 3) Swagger service which is used for testing APIs
 4) ORM Entity Framework Core is used to work with ApplicationDbContext
 5) Integration tests using xUnit
+6) Dtos validation using FluentValidation
 
 Design patterns used:
 1) Repository

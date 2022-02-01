@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using FluentValidation.AspNetCore;
+using JetBrains.Annotations;
 
 namespace HeroesWebApiDemo.Installers;
 
@@ -7,7 +8,8 @@ public class MvcInstaller : IInstaller
 {
     public void InstallServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddControllers();
+        services.AddControllers().AddFluentValidation(config => 
+            config.RegisterValidatorsFromAssemblyContaining<Program>());
         services.AddEndpointsApiExplorer();
     }
 }
