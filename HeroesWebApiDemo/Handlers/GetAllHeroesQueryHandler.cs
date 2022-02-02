@@ -2,10 +2,12 @@
 using HeroesWebApiDemo.Dtos.V1.Responses;
 using HeroesWebApiDemo.Queries;
 using HeroesWebApiDemo.Services;
+using JetBrains.Annotations;
 using MediatR;
 
 namespace HeroesWebApiDemo.Handlers;
 
+[UsedImplicitly]
 public class GetAllHeroesQueryHandler : IRequestHandler<GetAllHeroesQuery, IEnumerable<HeroResponseDto>>
 {
     private readonly IHeroService _heroService;

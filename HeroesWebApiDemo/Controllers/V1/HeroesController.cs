@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HeroesWebApiDemo.Controllers.V1;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Produces("application/json")]
 public class HeroesController : ControllerBase
@@ -39,11 +39,13 @@ public class HeroesController : ControllerBase
     [HttpGet(ApiRoutes.Heroes.GetById, Name = "GetHeroById")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var hero = await _heroService.GetHeroByIdAsync(id);
+        var query = new GetHeroByIdQuery(id);
+        var result = await _mediator.Send(query);
         
-        if (hero == null) return NotFound("Could not find hero with that id.");
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        if (result is null) return NotFound("Can't find hero with that id.");
         
-        return Ok(_mapper.Map<HeroResponseDto>(hero));
+        return Ok(result);
     }
 
     [HttpPost(ApiRoutes.Heroes.Create)]
