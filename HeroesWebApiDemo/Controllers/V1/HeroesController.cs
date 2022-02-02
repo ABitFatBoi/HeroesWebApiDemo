@@ -64,12 +64,12 @@ public class HeroesController : ControllerBase
     [HttpPut(ApiRoutes.Heroes.Update)]
     public async Task<IActionResult> Update(Guid id, [FromBody] HeroUpdateDto heroUpdateDto)
     {
-        var hero = _mapper.Map<Hero>(heroUpdateDto);
-        hero.Id = id;
+        var command = new HeroUpdateCommand(id, heroUpdateDto);
+        var result = await _mediator.Send(command);
         
-        var updated = await _heroService.UpdateHeroAsync(hero);
-
-        return updated ? Ok(_mapper.Map<HeroResponseDto>(hero)) : NotFound("Hero hasn't been updated");
+        if (result is null) return NotFound("Hero hasn't been updated");
+        
+        return Ok(result);
     }
 
     [HttpDelete(ApiRoutes.Heroes.Delete)]

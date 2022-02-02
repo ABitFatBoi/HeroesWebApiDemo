@@ -9,22 +9,22 @@ using MediatR;
 namespace HeroesWebApiDemo.Handlers;
 
 [UsedImplicitly]
-public class HeroCreateCommandHandler : IRequestHandler<HeroCreateCommand, HeroResponseDto?>
+public class HeroUpdateCommandHandler : IRequestHandler<HeroUpdateCommand, HeroResponseDto?>
 {
     private readonly IHeroService _heroService;
     private readonly IMapper _mapper;
 
-    public HeroCreateCommandHandler(IHeroService heroService, IMapper mapper)
+    public HeroUpdateCommandHandler(IHeroService heroService, IMapper mapper)
     {
         _heroService = heroService;
         _mapper = mapper;
     }
     
-    public async Task<HeroResponseDto?> Handle(HeroCreateCommand request, CancellationToken cancellationToken)
+    public async Task<HeroResponseDto?> Handle(HeroUpdateCommand request, CancellationToken cancellationToken)
     {
         var hero = _mapper.Map<Hero>(request);
-        var created = await _heroService.CreateHeroAsync(hero);
+        var updated = await _heroService.UpdateHeroAsync(hero);
 
-        return !created ? null : _mapper.Map<HeroResponseDto>(hero);
+        return !updated ? null : _mapper.Map<HeroResponseDto>(hero);
     }
 }
