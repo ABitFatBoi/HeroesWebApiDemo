@@ -1,4 +1,5 @@
 using AutoMapper;
+using HeroesWebApiDemo.Commands;
 using HeroesWebApiDemo.Dtos.V1.Requests;
 using HeroesWebApiDemo.Dtos.V1.Responses;
 using HeroesWebApiDemo.Entities;
@@ -10,9 +11,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+// ReSharper disable ConditionIsAlwaysTrueOrFalse
+
 namespace HeroesWebApiDemo.Controllers.V1;
 
-// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Produces("application/json")]
 public class HeroesController : ControllerBase
@@ -41,8 +44,7 @@ public class HeroesController : ControllerBase
     {
         var query = new GetHeroByIdQuery(id);
         var result = await _mediator.Send(query);
-        
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+
         if (result is null) return NotFound("Can't find hero with that id.");
         
         return Ok(result);
@@ -51,14 +53,12 @@ public class HeroesController : ControllerBase
     [HttpPost(ApiRoutes.Heroes.Create)]
     public async Task<IActionResult> Create([FromBody] HeroCreateDto heroCreateDto)
     {
-        var hero = _mapper.Map<Hero>(heroCreateDto);
-        var created = await _heroService.CreateHeroAsync(hero);
-
-        if (!created) return BadRequest("Could not create new hero.");
-
-        var responseDto = _mapper.Map<HeroResponseDto>(hero);
-
-        return CreatedAtAction(nameof(GetById), new { id = responseDto.Id },responseDto);
+        var command = new HeroCreateCommand(heroCreateDto);
+        var result = await _mediator.Send(command);
+        
+        if (result is null) return BadRequest("Could not create new hero.");
+        
+        return CreatedAtAction(nameof(GetById), new { id = result.Id },result);
     }
 
     [HttpPut(ApiRoutes.Heroes.Update)]

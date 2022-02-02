@@ -1,4 +1,5 @@
 using AutoMapper;
+using HeroesWebApiDemo.Commands;
 using HeroesWebApiDemo.Dtos.V1.Requests;
 using HeroesWebApiDemo.Dtos.V1.Responses;
 using HeroesWebApiDemo.Entities;
@@ -9,7 +10,7 @@ public class HeroesProfile : Profile
 {
     public HeroesProfile()
     {
-        CreateMap<HeroCreateDto, Hero>();
+        CreateMap<HeroCreateCommand, Hero>();
         CreateMap<HeroUpdateDto, Hero>();
         CreateMap<Hero, HeroResponseDto>();
     }
