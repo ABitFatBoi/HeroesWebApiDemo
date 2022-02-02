@@ -20,14 +20,10 @@ namespace HeroesWebApiDemo.Controllers.V1;
 [Produces("application/json")]
 public class HeroesController : ControllerBase
 {
-    private readonly IHeroService _heroService;
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
 
-    public HeroesController(IHeroService heroService, IMapper mapper, IMediator mediator)
+    public HeroesController(IMediator mediator)
     {
-        _heroService = heroService;
-        _mapper = mapper;
         _mediator = mediator;
     }
     
