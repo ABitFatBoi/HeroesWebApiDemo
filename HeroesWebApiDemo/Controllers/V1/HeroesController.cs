@@ -2,8 +2,10 @@ using AutoMapper;
 using HeroesWebApiDemo.Dtos.V1.Requests;
 using HeroesWebApiDemo.Dtos.V1.Responses;
 using HeroesWebApiDemo.Entities;
+using HeroesWebApiDemo.Queries;
 using HeroesWebApiDemo.Routes.V1;
 using HeroesWebApiDemo.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,20 +19,21 @@ public class HeroesController : ControllerBase
 {
     private readonly IHeroService _heroService;
     private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public HeroesController(IHeroService heroService, IMapper mapper)
+    public HeroesController(IHeroService heroService, IMapper mapper, IMediator mediator)
     {
         _heroService = heroService;
         _mapper = mapper;
+        _mediator = mediator;
     }
     
     [HttpGet(ApiRoutes.Heroes.GetAll)]
     public async Task<IActionResult> GetAll()
     {
-        var heroes = (await _heroService.GetAllHeroesAsync())
-            .Select(h => _mapper.Map<HeroResponseDto>(h));
-
-        return Ok(heroes);
+        var query = new GetAllHeroesQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
     
     [HttpGet(ApiRoutes.Heroes.GetById, Name = "GetHeroById")]
