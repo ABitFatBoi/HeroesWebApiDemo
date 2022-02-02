@@ -75,8 +75,8 @@ public class HeroesController : ControllerBase
     [HttpDelete(ApiRoutes.Heroes.Delete)]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var deleted = await _heroService.DeleteHeroAsync(id);
-        
-        return deleted ? NoContent() : NotFound("Could not find hero with that id.");
+        var command = new HeroDeleteCommand(id);
+        var result = await _mediator.Send(command);
+        return result ? NoContent() : NotFound("Could not find hero with that id.");
     }
 }
