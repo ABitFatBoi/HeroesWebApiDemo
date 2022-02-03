@@ -47,7 +47,7 @@ public class CacheAttribute : Attribute, IAsyncActionFilter
         if (executedContext.Result is OkObjectResult okObjectResult)
         {
             await cacheResponseService.CacheResponseAsync(
-                cacheKey, okObjectResult.Value!, _expirationTimeInSeconds);
+                cacheKey, okObjectResult.Value, _expirationTimeInSeconds);
         }
     }
 

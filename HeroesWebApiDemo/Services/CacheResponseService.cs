@@ -1,14 +1,33 @@
-﻿namespace HeroesWebApiDemo.Services;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+
+namespace HeroesWebApiDemo.Services;
 
 public class CacheResponseService : ICacheResponseService
 {
-    public async Task CacheResponseAsync(string key, object response, int expirationTimeInSeconds)
+    private readonly IDistributedCache _distributedCache;
+
+    public CacheResponseService(IDistributedCache distributedCache)
     {
-        throw new NotImplementedException();
+        _distributedCache = distributedCache;
+    }
+    
+    public async Task CacheResponseAsync(string key, object? response, int expirationTimeInSeconds)
+    {
+        if (response is null) return;
+
+        var serializedResponse = JsonConvert.SerializeObject(response);
+
+        await _distributedCache.SetStringAsync(key, serializedResponse, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(expirationTimeInSeconds)
+        });
     }
 
-    public async Task<string> GetCachedResponseAsync(string key)
+    public async Task<string?> GetCachedResponseAsync(string key)
     {
-        throw new NotImplementedException();
+        var cachedResponse = await _distributedCache.GetStringAsync(key);
+        
+        return string.IsNullOrEmpty(cachedResponse) ? null : cachedResponse;
     }
 }
