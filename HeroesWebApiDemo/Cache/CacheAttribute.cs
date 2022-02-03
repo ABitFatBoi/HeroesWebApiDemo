@@ -1,4 +1,5 @@
-﻿using HeroesWebApiDemo.Options;
+﻿using System.Text;
+using HeroesWebApiDemo.Options;
 using HeroesWebApiDemo.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -52,6 +53,14 @@ public class CacheAttribute : Attribute, IAsyncActionFilter
 
     private string GenerateCacheKey(HttpRequest request)
     {
-        throw new NotImplementedException();
+        var sb = new StringBuilder();
+        sb.Append(request.Path);
+        
+        foreach (var keyValuePair in request.Query.OrderBy(x => x.Key))
+        {
+            sb.Append($"&{keyValuePair.Key}={keyValuePair.Value}");
+        }
+
+        return sb.ToString();
     }
 }
