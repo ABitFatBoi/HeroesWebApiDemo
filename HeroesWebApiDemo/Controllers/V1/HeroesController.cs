@@ -1,4 +1,5 @@
 using AutoMapper;
+using HeroesWebApiDemo.Cache;
 using HeroesWebApiDemo.Commands;
 using HeroesWebApiDemo.Dtos.V1.Requests;
 using HeroesWebApiDemo.Dtos.V1.Responses;
@@ -28,6 +29,7 @@ public class HeroesController : ControllerBase
     }
     
     [HttpGet(ApiRoutes.Heroes.GetAll)]
+    [Cache(10)]
     public async Task<IActionResult> GetAll()
     {
         var query = new GetAllHeroesQuery();
@@ -36,6 +38,7 @@ public class HeroesController : ControllerBase
     }
     
     [HttpGet(ApiRoutes.Heroes.GetById, Name = "GetHeroById")]
+    [Cache(10)]
     public async Task<IActionResult> GetById(Guid id)
     {
         var query = new GetHeroByIdQuery(id);
