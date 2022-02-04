@@ -8,6 +8,7 @@ Application functionality:
 4) ORM Entity Framework Core is used to work with ApplicationDbContext
 5) Integration tests using xUnit
 6) Dtos validation using FluentValidation
+7) Caching requests using redis (off by default, activated in appsettings.json, RedisCacheSetting.Enabled flag)
 
 Design patterns used:
 1) Repository
