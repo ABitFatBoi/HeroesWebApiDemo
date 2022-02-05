@@ -1,12 +1,8 @@
-using AutoMapper;
 using HeroesWebApiDemo.Cache;
 using HeroesWebApiDemo.Commands;
 using HeroesWebApiDemo.Dtos.V1.Requests;
-using HeroesWebApiDemo.Dtos.V1.Responses;
-using HeroesWebApiDemo.Entities;
 using HeroesWebApiDemo.Queries;
 using HeroesWebApiDemo.Routes.V1;
-using HeroesWebApiDemo.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

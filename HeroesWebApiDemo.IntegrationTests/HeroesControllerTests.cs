@@ -78,6 +78,32 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         (await response.Content.ReadAsStringAsync()).Should().Be("\"Can't find hero with that id.\"");
     }
+    
+    [Fact]
+    public async Task GetById_WithTestHero_ReturnsOkResponse()
+    {
+        //Arrange
+        await _client.AuthenticateAsync();
+        var hero1 = await _client.CreateHeroRequestWithAssertionsAsync(
+            new HeroCreateDto {
+                Name = "Hero 1 (Ranged Mage)",
+                IsMelee = false,
+                Type = HeroType.Mage
+            });
+        
+        //Act
+        var response = await _client.GetAsync(
+            ApiRoutes.Heroes.GetById.Replace("{id}", hero1.Id.ToString()));
+        
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var returnedHero = JsonConvert.DeserializeObject<HeroResponseDto>(await response.Content.ReadAsStringAsync());
+
+        returnedHero.Should().NotBeNull();
+        returnedHero.Id.Should().Be(hero1.Id);
+        returnedHero.Type.Should().Be(hero1.Type);
+        returnedHero.IsMelee.Should().Be(hero1.IsMelee);
+    }
 
     [Fact]
     public async Task GetAll_WithTestHeroes_ReturnsAllHeroes()
