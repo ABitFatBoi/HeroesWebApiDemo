@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -61,6 +62,21 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         JsonConvert.DeserializeObject<List<Hero>>(await response.Content.ReadAsStringAsync()).Should().BeEmpty();
+    }
+    
+    [Fact]
+    public async Task GetById_WithoutAnyHeroes_ReturnsNotFoundResponse()
+    {
+        //Arrange
+        await _client.AuthenticateAsync();
+        
+        //Act
+        var response = await _client.GetAsync(
+            ApiRoutes.Heroes.GetById.Replace("{id}", Guid.NewGuid().ToString()));
+        
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await response.Content.ReadAsStringAsync()).Should().Be("\"Can't find hero with that id.\"");
     }
 
     [Fact]
