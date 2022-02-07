@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HeroesWebApiDemo.Dtos.V1.Requests;
@@ -168,5 +169,41 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
 
         //Assert
         //Done in CreateHeroRequestWithAssertionsAsync
+    }
+
+    [Fact]
+    public async Task Update_HeroWhenItExists_ReturnsOkResponse()
+    {
+        //Arrange
+        await _client.AuthenticateAsync();
+        
+        const string heroName = "Hero 1 (Ranged Mage)";
+        const bool isMelee = false;
+        const HeroType heroType = HeroType.Mage;
+        
+        var hero = await _client.CreateHeroRequestWithAssertionsAsync(
+            new HeroCreateDto {
+                Name = heroName,
+                IsMelee = isMelee,
+                Type = heroType
+            });
+        
+        //Act
+        var response = await _client.PutAsJsonAsync(
+            ApiRoutes.Heroes.GetById.Replace("{id}", hero.Id.ToString()),
+            new HeroUpdateDto {
+                Name = heroName,
+                IsMelee = isMelee,
+                Type = heroType
+            });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        
+        var returnedHero = JsonConvert.DeserializeObject<HeroResponseDto>(await response.Content.ReadAsStringAsync());
+        
+        returnedHero.Id.Should().Be(hero.Id);
+        returnedHero.Name.Should().Be(hero.Name);
+        returnedHero.IsMelee.Should().Be(hero.IsMelee);
+        returnedHero.Type.Should().Be(hero.Type);
     }
 }
