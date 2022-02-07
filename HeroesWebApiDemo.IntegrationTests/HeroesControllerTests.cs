@@ -252,4 +252,19 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         (await response.Content.ReadAsStringAsync()).Should().Be(String.Empty);
     }
+    
+    [Fact]
+    public async Task Delete_WhenHeroDoesntExist_ReturnsNoFoundResponse()
+    {
+        //Arrange
+        await _client.AuthenticateAsync();
+
+        //Act
+        var response = await _client.DeleteAsync(
+            ApiRoutes.Heroes.Delete.Replace("{id}", Guid.NewGuid().ToString()));
+        
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await response.Content.ReadAsStringAsync()).Should().Be("\"Could not find hero with that id.\"");
+    }
 }
