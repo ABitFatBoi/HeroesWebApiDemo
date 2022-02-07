@@ -62,7 +62,7 @@ public class HeroesController : ControllerBase
         var command = new HeroUpdateCommand(id, heroUpdateDto);
         var result = await _mediator.Send(command);
         
-        if (result is null) return NotFound("Hero hasn't been updated");
+        if (result is null) return NotFound("Could not find hero with that id.");
         
         return Ok(result);
     }

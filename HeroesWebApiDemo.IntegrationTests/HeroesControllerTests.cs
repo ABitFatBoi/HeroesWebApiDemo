@@ -197,6 +197,7 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
                 Type = heroType
             });
 
+        //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var returnedHero = JsonConvert.DeserializeObject<HeroResponseDto>(await response.Content.ReadAsStringAsync());
@@ -205,5 +206,29 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
         returnedHero.Name.Should().Be(hero.Name);
         returnedHero.IsMelee.Should().Be(hero.IsMelee);
         returnedHero.Type.Should().Be(hero.Type);
+    }
+    
+    [Fact]
+    public async Task Update_HeroWhenItDoesntExist_ReturnsNotFoundResponse()
+    {
+        //Arrange
+        await _client.AuthenticateAsync();
+        
+        const string heroName = "Hero 1 (Ranged Mage)";
+        const bool isMelee = false;
+        const HeroType heroType = HeroType.Mage;
+
+        //Act
+        var response = await _client.PutAsJsonAsync(
+            ApiRoutes.Heroes.GetById.Replace("{id}", Guid.NewGuid().ToString()),
+            new HeroUpdateDto {
+                Name = heroName,
+                IsMelee = isMelee,
+                Type = heroType
+            });
+
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        (await response.Content.ReadAsStringAsync()).Should().Be("\"Could not find hero with that id.\"");
     }
 }

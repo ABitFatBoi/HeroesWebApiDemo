@@ -5,6 +5,7 @@ using HeroesWebApiDemo.Entities;
 using HeroesWebApiDemo.Services;
 using JetBrains.Annotations;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace HeroesWebApiDemo.Handlers;
 
@@ -23,8 +24,14 @@ public class HeroUpdateCommandHandler : IRequestHandler<HeroUpdateCommand, HeroR
     public async Task<HeroResponseDto?> Handle(HeroUpdateCommand request, CancellationToken cancellationToken)
     {
         var hero = _mapper.Map<Hero>(request);
-        var updated = await _heroService.UpdateHeroAsync(hero);
-
+        var updated = false;
+        try
+        {
+            updated = await _heroService.UpdateHeroAsync(hero);
+        }
+        catch (DbUpdateConcurrencyException e)
+        {
+        }
         return !updated ? null : _mapper.Map<HeroResponseDto>(hero);
     }
 }
