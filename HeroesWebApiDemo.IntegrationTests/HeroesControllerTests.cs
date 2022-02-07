@@ -190,7 +190,7 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
         
         //Act
         var response = await _client.PutAsJsonAsync(
-            ApiRoutes.Heroes.GetById.Replace("{id}", hero.Id.ToString()),
+            ApiRoutes.Heroes.Update.Replace("{id}", hero.Id.ToString()),
             new HeroUpdateDto {
                 Name = heroName,
                 IsMelee = isMelee,
@@ -220,7 +220,7 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
 
         //Act
         var response = await _client.PutAsJsonAsync(
-            ApiRoutes.Heroes.GetById.Replace("{id}", Guid.NewGuid().ToString()),
+            ApiRoutes.Heroes.Update.Replace("{id}", Guid.NewGuid().ToString()),
             new HeroUpdateDto {
                 Name = heroName,
                 IsMelee = isMelee,
@@ -230,5 +230,26 @@ public class HeroesControllerTests : IClassFixture<WebApplicationFactory<Program
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         (await response.Content.ReadAsStringAsync()).Should().Be("\"Could not find hero with that id.\"");
+    }
+    
+    [Fact]
+    public async Task Delete_WhenHeroExists_ReturnsNoContentResponse()
+    {
+        //Arrange
+        await _client.AuthenticateAsync();
+        var hero = await _client.CreateHeroRequestWithAssertionsAsync(
+            new HeroCreateDto {
+                Name = "Hero 1 (Ranged Mage)",
+                IsMelee = false,
+                Type = HeroType.Mage
+            });
+        
+        //Act
+        var response = await _client.DeleteAsync(
+            ApiRoutes.Heroes.Delete.Replace("{id}", hero.Id.ToString()));
+        
+        //Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        (await response.Content.ReadAsStringAsync()).Should().Be(String.Empty);
     }
 }
